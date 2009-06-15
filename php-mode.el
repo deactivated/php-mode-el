@@ -325,6 +325,12 @@ See `php-beginning-of-defun'."
 ;;   (c-lang-defvar c-block-stmt-2-kwds (c-lang-const c-block-stmt-2-kwds))
   (set 'c-block-stmt-2-key php-block-stmt-2-key)
 
+  ;; Default to C++ style comments so that filling inside of them
+  ;; works.
+  (set (make-local-variable 'comment-start)
+       (c-lang-const c-line-comment-starter))
+  (set (make-local-variable 'comment-end) "")
+
   ;; Specify that cc-mode recognize Javadoc comment style
   (add-to-list 'c-doc-comment-style '(php-mode . javadoc))
 
