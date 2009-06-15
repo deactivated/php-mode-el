@@ -330,7 +330,7 @@ See `php-beginning-of-defun'."
 
 ;;   (c-lang-defconst c-class-decl-kwds
 ;;     php php-class-decl-kwds)
-  (setq 'c-class-key php-class-key)
+  (setq c-class-key php-class-key)
 
   (setq font-lock-defaults
         '((php-font-lock-keywords-1
