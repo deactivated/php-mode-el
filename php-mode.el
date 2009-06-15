@@ -340,15 +340,15 @@ See `php-beginning-of-defun'."
            php-font-lock-keywords-3)
           nil                               ; KEYWORDS-ONLY
           t                                 ; CASE-FOLD
-          (("_" . "w"))                    ; SYNTAX-ALIST
+          (("_" . "w"))                     ; SYNTAX-ALIST
           nil))                             ; SYNTAX-BEGIN
   (modify-syntax-entry ?# "< b")
 
   ;; Electric behaviour must be turned off, they do not work since
   ;; they can not find the correct syntax in embedded PHP.
   ;;
-  ;; Seems to work with narrowing so let it be on if the user prefers it.
-  ;;(setq c-electric-flag nil)
+  ;; Seems to work with narrowing so let it be on if the user prefers
+  ;; it.  (setq c-electric-flag nil)
 
   (setq font-lock-maximum-decoration t
         case-fold-search t              ; PHP vars are case-sensitive
