@@ -973,6 +973,45 @@ current `tags-file-name'."
                   "_SERVER" "_FILES" "_REQUEST")))
   "PHP superglobal variables.")
 
+
+;; Rudimentary here-doc support
+(defconst php-here-doc-beg-re
+  "<<<\\([a-zA-Z0-9_]+\\)")
+
+(defun php-here-doc-end-match ()
+  (concat "^"
+	  (regexp-quote (match-string 1))
+	  ";?"))
+
+(defun php-font-lock-here-docs (limit)
+  (if (re-search-forward php-here-doc-beg-re limit t)
+      (let (beg)
+	(beginning-of-line)
+	(forward-line)
+	(setq beg (point))
+	(if (re-search-forward (php-here-doc-end-match) nil t)
+	    (progn
+	      (set-match-data (list beg (point)))
+	      t)))))
+ 
+(defun php-font-lock-maybe-here-docs (limit)
+  (let (beg)
+    (save-excursion
+      (if (re-search-backward php-here-doc-beg-re nil t)
+	  (progn
+	    (beginning-of-line)
+	    (forward-line)
+	    (setq beg (point)))))
+    (if (and beg
+	     (let ((end-match (php-here-doc-end-match)))
+	       (and (not (re-search-backward end-match beg t))
+		    (re-search-forward end-match nil t))))
+	(progn
+	  (set-match-data (list beg (point)))
+	  t)
+      nil)))
+
+
 ;; Set up font locking
 (defconst php-font-lock-keywords-1
   (list
@@ -980,6 +1019,14 @@ current `tags-file-name'."
    (cons
     (concat "[^_$]?\\<\\(" php-constants "\\)\\>[^_]?")
     '(1 font-lock-constant-face))
+
+   ;; Fontify here-docs
+   '(php-font-lock-here-docs
+     0 font-lock-string-face t)
+   '(php-font-lock-maybe-here-docs
+     0 font-lock-string-face t)
+   `(,php-here-doc-beg-re
+     0 font-lock-string-face t)
 
    ;; Fontify keywords
    (cons
