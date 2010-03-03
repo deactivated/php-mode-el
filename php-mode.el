@@ -306,23 +306,17 @@ See `php-beginning-of-defun'."
   "Major mode for editing PHP code.\n\n\\{php-mode-map}"
   (c-add-language 'php-mode 'c-mode)
 
-;; PHP doesn't have C-style macros.
-;; HACK: Overwrite this syntax with rules to match <?php and others.
-;;   (c-lang-defconst c-opt-cpp-start php php-tags-key)
-;;   (c-lang-defvar c-opt-cpp-start (c-lang-const c-opt-cpp-start))
-  (set (make-local-variable 'c-opt-cpp-start) php-tags-key)
-;;   (c-lang-defconst c-opt-cpp-start php php-tags-key)
-;;   (c-lang-defvar c-opt-cpp-start (c-lang-const c-opt-cpp-start))
-  (set (make-local-variable 'c-opt-cpp-prefix) php-tags-key)
+  ;; PHP doesn't have C-style macros.
+  ;; HACK: Overwrite this syntax with rules to match <?php and others.
+  ;; Breaks due to cc-engine changes in HEAD
+  ;;  (set (make-local-variable 'c-opt-cpp-start) php-tags-key)
+  ;;  (set (make-local-variable 'c-opt-cpp-prefix) php-tags-key)
 
+  (set (make-local-variable 'c-opt-cpp-start) nil)
+  (set (make-local-variable 'c-opt-cpp-prefix) nil)
   (c-set-offset 'cpp-macro 0)
 
-;;   (c-lang-defconst c-block-stmt-1-kwds php php-block-stmt-1-kwds)
-;;   (c-lang-defvar c-block-stmt-1-kwds (c-lang-const c-block-stmt-1-kwds))
   (set 'c-block-stmt-1-key php-block-stmt-1-key)
-
-;;   (c-lang-defconst c-block-stmt-2-kwds php php-block-stmt-2-kwds)
-;;   (c-lang-defvar c-block-stmt-2-kwds (c-lang-const c-block-stmt-2-kwds))
   (set 'c-block-stmt-2-key php-block-stmt-2-key)
 
   ;; Default to C++ style comments so that filling inside of them
@@ -334,8 +328,8 @@ See `php-beginning-of-defun'."
   ;; Specify that cc-mode recognize Javadoc comment style
   (add-to-list 'c-doc-comment-style '(php-mode . javadoc))
 
-;;   (c-lang-defconst c-class-decl-kwds
-;;     php php-class-decl-kwds)
+  ;;   (c-lang-defconst c-class-decl-kwds
+  ;;     php php-class-decl-kwds)
   (setq c-class-key php-class-key)
 
   (setq font-lock-defaults
